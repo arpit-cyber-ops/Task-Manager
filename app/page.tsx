@@ -1,12 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation"
 
 export default async function App() {
 
   await auth.protect();
-
-  return (
-    <div>
-      DashBoard
-    </div>
-  )
+  redirect("/workspaces");
 }
