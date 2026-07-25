@@ -1,4 +1,5 @@
 import { UserButton } from "@clerk/nextjs"
+import CreateWorkspaceDialog from "./Create-Workspace-Dialog"
 
 export default function Homepage_Header() {
     
@@ -8,7 +9,7 @@ export default function Homepage_Header() {
                 <p>Task-Manager</p>
             </div>
             <div className="flex gap-4">
-                <button>+ Create Workspace</button>
+                <CreateWorkspaceDialog />
                 <UserButton />
             </div>
         </div>

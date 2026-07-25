@@ -7,7 +7,7 @@ interface WorkspaceProps {
 
 export default function WorkspaceCard({ workspace }: WorkspaceProps) {
     return (
-        <Link href={`/workspaces/${workspace.id}/tasks`} className="border-4 rounded-md flex flex-col p-4 gap-4">
+        <Link href={`/workspaces/${workspace.id}/tasks`} className="border-4 rounded-md flex flex-col p-4 gap-4 bg-slate-300 hover:scale-101 transition-transform">
             <div>
                 <p className="line-clamp-2 text-xl" title={workspace.name}>{workspace.name}</p>
             </div>
@@ -18,7 +18,7 @@ export default function WorkspaceCard({ workspace }: WorkspaceProps) {
                 </p>
                 <p className="text-md">
                     {workspace._count.memberships}
-                    {workspace._count.memberships > 1 ? "Members" : "Member"}
+                    {workspace._count.memberships > 1 ? " Members" : " Member"}
                 </p>
             </div>
         </Link>

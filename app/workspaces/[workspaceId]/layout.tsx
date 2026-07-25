@@ -1,14 +1,36 @@
+import prisma from "@/lib/prisma";
 import { UserButton } from "@clerk/nextjs";
-import { currentUser } from "@clerk/nextjs/server"
+import { auth, currentUser } from "@clerk/nextjs/server"
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-export default async function WorkspaceLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+
+export default async function WorkspaceLayout({children, params}: {children: React.ReactNode, params: Promise<{workspaceId: string}>}) {
+    await auth.protect();
     const user = await currentUser();
+    const {workspaceId} = await params;
+    const {userId} = await auth();
+
+    const workspace = await prisma.workspace.findFirst({
+        where: {
+            id: workspaceId,
+            memberships: {
+                some: {
+                    userId: userId!
+                }
+            }
+        },
+    });
+
+    if (!workspace) {
+        notFound();
+    }
+
     return (
         <div className="flex flex-col">
             <div className="flex justify-between border p-4 items-center">
                 <p>Task-Manager</p>
-                <p>College Project</p>
+                <p>{workspace.name}</p>
                 <div className="flex gap-2 border-4 rounded-full px-2">
                     <UserButton />
                     <p>{user?.firstName}</p>
@@ -19,10 +41,10 @@ export default async function WorkspaceLayout({ children }: Readonly<{ children:
                     <Link href={"/workspaces"}>
                         {`<- Workspaces`}
                     </Link>
-                    <Link href={`/workspaces/workspace.id/tasks`}>
+                    <Link href={`/workspaces/${workspaceId}/tasks`}>
                         Tasks
                     </Link>
-                    <Link href={`/workspaces/workspace.id/members`}>
+                    <Link href={`/workspaces/${workspaceId}/members`}>
                         Members
                     </Link>
                 </div>
