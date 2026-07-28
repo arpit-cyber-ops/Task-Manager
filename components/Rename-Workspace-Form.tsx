@@ -48,18 +48,19 @@ export default function RenameWorkspaceForm({ workspace, onClose }: { workspace:
             <div className="flex gap-9 px-4 justify-end">
 
                 <button
-                    className={`text-lg border-2 border-black rounded-full px-2 cursor-pointer ${isPending && `hover:bg-gray-400 hover:scale-102 transition-transform`}`}
+                    className={`text-lg border-2 border-black rounded-full px-2 cursor-pointer ${!isPending && `hover:bg-gray-400 hover:scale-102 transition-transform`}`}
                     disabled={isPending} >
                     {isPending ? "Renaming" : "Rename"}
                 </button>
 
-                {!isPending && <button
-                    className={`text-lg border-2 border-black rounded-full px-2 cursor-pointer ${isPending && `hover:bg-gray-400 hover:scale-102 transition-transform`}`}
-                    type="button"
-                    disabled={isPending}
-                    onClick={onClose} >
-                    Cancel
-                </button>}
+                {!isPending &&
+                    <button
+                        className={`text-lg border-2 border-black rounded-full px-2 cursor-pointer ${!isPending && `hover:bg-gray-400 hover:scale-102 transition-transform`}`}
+                        type="button"
+                        disabled={isPending}
+                        onClick={onClose} >
+                        Cancel
+                    </button>}
 
             </div>
 

@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { workspaceSchema } from "@/lib/validations/workspace";
+import { createWorkspaceSchema, renameWorkspaceSchema } from "@/lib/validations/workspace";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -13,7 +13,7 @@ export async function createWorkspace(_previousState: unknown, formData: FormDat
     }
 
     const data = Object.fromEntries(formData);
-    const validationResult = workspaceSchema.safeParse(data);
+    const validationResult = createWorkspaceSchema.safeParse(data);
 
     if (!validationResult.success) {
 
@@ -21,6 +21,7 @@ export async function createWorkspace(_previousState: unknown, formData: FormDat
             success: false,
             errors: z.flattenError(validationResult.error).fieldErrors,
         };
+
     }
 
     await prisma.workspace.create({
@@ -48,7 +49,7 @@ export async function renameWorkspace(_previousState: unknown, formData: FormDat
         throw new Error("You're not authenticated");
     }
     const data = Object.fromEntries(formData)
-    const validationResult = workspaceSchema.safeParse(data);
+    const validationResult = renameWorkspaceSchema.safeParse(data);
     if (!validationResult.success) {
         return {
             success: false,
