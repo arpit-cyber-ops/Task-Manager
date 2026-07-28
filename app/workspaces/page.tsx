@@ -8,7 +8,6 @@ export default async function Workspace() {
 
   await auth.protect();
   const { userId } = await auth();
-  
   const workspaces = await prisma.workspace.findMany({
       where: {
           memberships : {
@@ -24,9 +23,17 @@ export default async function Workspace() {
                   memberships: true,
                   tasks: true,
               }
-          }
+          },
+          memberships: {
+            where: {
+              userId: userId!,
+            },
+            select: {
+              role: true,
+            }
+          },
       },
-  })
+  });
 
   return (
     <div className="bg-violet-400">

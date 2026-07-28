@@ -7,6 +7,11 @@ export type WorkspaceWithCounts = Prisma.WorkspaceGetPayload<{
                 memberships: true,
                 tasks: true,
             };
-        };
+        },
+        memberships: {
+            select: {
+                role: true,
+            },
+        },
     };
 }>;
