@@ -2,20 +2,13 @@
 import { WorkspaceWithCounts } from "@/types/workspace";
 import DeleteWorkspaceForm from "./Delete-Workspace-Form";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
-import { useState } from "react";
 
-export default function DeleteWorkspaceDialog({workspace}: {workspace: WorkspaceWithCounts}) {
-    const [open, setOpen] = useState(false)
+export default function DeleteWorkspaceDialog({workspace, open, onOpenChange}: {workspace: WorkspaceWithCounts, open: boolean, onOpenChange: (open: boolean) => void}) {
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger 
-            render={<button className="p-1 cursor-pointer hover:bg-slate-400">🗑️</button>}>
-            </DialogTrigger>
-
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="bg-slate-300 rounded-xl">
-                <DeleteWorkspaceForm workspace={workspace} onClose={() => setOpen(false)}/>
+                <DeleteWorkspaceForm workspace={workspace} onClose={() => onOpenChange(false)}/>
             </DialogContent>
-
         </Dialog>
     )
 }

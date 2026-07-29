@@ -4,15 +4,11 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { WorkspaceWithCounts } from "@/types/workspace";
 import RenameWorkspaceForm from "./Rename-Workspace-Form";
 
-export default function RenameWorkspaceDialog({workspace}: {workspace: WorkspaceWithCounts}) {
-    const [open, setOpen] = useState(false);
+export default function RenameWorkspaceDialog({workspace, open, onOpenChange}: {workspace: WorkspaceWithCounts, open: boolean, onOpenChange: (open: boolean) => void}) {
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger
-            render={<button className="p-1 cursor-pointer hover:bg-slate-400">✏️</button>}/>
-
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="bg-slate-300 rounded-xl">
-                <RenameWorkspaceForm workspace={workspace} onClose={() => setOpen(false)}/>
+                <RenameWorkspaceForm workspace={workspace} onClose={() => onOpenChange(false)}/>
             </DialogContent>
         </Dialog>
     )
