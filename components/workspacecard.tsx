@@ -1,6 +1,7 @@
 import type { WorkspaceWithCounts } from "@/types/workspace"
 import Link from "next/link"
 import RenameWorkspaceDialog from "./Rename-Workspace-Dialog"
+import DeleteWorkspaceDialog from "./Delete-Workspace-Dialog"
 
 interface WorkspaceProps {
     workspace: WorkspaceWithCounts
@@ -26,6 +27,8 @@ export default function WorkspaceCard({ workspace }: WorkspaceProps) {
                 </div>
                 <div>
                     {workspace.memberships[0].role === "OWNER" && <RenameWorkspaceDialog workspace={workspace}/>}
+                    {workspace.memberships[0].role === "OWNER" && <DeleteWorkspaceDialog workspace={workspace}/>}
+
                 </div>
             </div>
         </div>

@@ -20,3 +20,10 @@ export const renameWorkspaceSchema = z.object({
         .cuid()
 })
 
+export const deleteWorkspaceSchema = z.object({
+    workspaceId: z
+        .string()
+        .trim()
+        .cuid(),
+});
+

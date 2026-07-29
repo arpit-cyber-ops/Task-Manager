@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { createWorkspaceSchema, renameWorkspaceSchema } from "@/lib/validations/workspace";
+import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema } from "@/lib/validations/workspace";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -80,7 +80,7 @@ export async function renameWorkspace(_previousState: unknown, formData: FormDat
             id: validationResult.data.workspaceId,
         },
         data: {
-            name:validationResult.data.name,
+            name: validationResult.data.name,
         },
     });
 
@@ -90,3 +90,50 @@ export async function renameWorkspace(_previousState: unknown, formData: FormDat
         success: true,
     };
 }
+
+export async function deleteWorkspace(_previousState: unknown, formData: FormData) {
+    const { userId } = await auth();
+    if (!userId) {
+        throw new Error("You're not Authenticated");
+    }
+    const data = Object.fromEntries(formData);
+    const validationResult = deleteWorkspaceSchema.safeParse(data);
+    if (!validationResult.success) {
+        return {
+            success: false,
+            error: {
+                general: ["Unable to delete workspace"],
+            },
+        };
+    }
+    const membership = await prisma.membership.findUnique({
+        where: {
+            workspaceId_userId: {
+                userId,
+                workspaceId: validationResult.data.workspaceId,
+            },
+        },
+    });
+
+    if (!membership || membership.role !== "OWNER") {
+        return {
+            success: false,
+            error: {
+                general: ["Unable to delete workspace"],
+            },
+        };
+    }
+
+    await prisma.workspace.delete({
+        where: {
+            id: validationResult.data.workspaceId
+        }
+    })
+
+    revalidatePath("/workspaces");
+
+    return {
+        success: true
+    };
+}
+
