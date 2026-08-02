@@ -27,3 +27,13 @@ export const deleteWorkspaceSchema = z.object({
         .cuid(),
 });
 
+export const inviteMemberSchema = z.object({
+    emailId: z
+        .string()
+        .trim()
+        .email(),
+    workspaceId: z
+        .string()
+        .trim()
+        .cuid(),
+});

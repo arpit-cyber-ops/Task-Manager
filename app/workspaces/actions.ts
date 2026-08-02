@@ -1,9 +1,9 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema } from "@/lib/validations/workspace";
-import { auth } from "@clerk/nextjs/server";
+import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema, inviteMemberSchema } from "@/lib/validations/workspace";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { success, z } from "zod";
 
 export async function createWorkspace(_previousState: unknown, formData: FormData) {
 
@@ -137,3 +137,98 @@ export async function deleteWorkspace(_previousState: unknown, formData: FormDat
     };
 }
 
+export async function inviteMember(_previousState: unknown, formData: FormData) {
+
+    const { userId } = await auth();
+
+    if (!userId) {
+        throw new Error("You're not Authenticated");
+    }
+
+    const formDataObjects = Object.fromEntries(formData);
+
+    const validationResult = inviteMemberSchema.safeParse(formDataObjects);
+
+    if (!validationResult.success) {
+        return {
+            success: false,
+            error: {
+                general: ["Please enter a valid email"],
+            },
+        };
+    }
+    const membership = await prisma.membership.findUnique({
+        where: {
+            workspaceId_userId: {
+                userId,
+                workspaceId: validationResult.data.workspaceId,
+            },
+        },
+    });
+    if (!membership || membership.role !== "OWNER") {
+
+        return {
+            success: false,
+            error: {
+                general: ["Unable to Invite Member"],
+            },
+        };
+        
+    }
+
+    const client = await clerkClient();
+
+    const { data } = await client.users.getUserList({
+        emailAddress: [validationResult.data.emailId]
+    })
+
+    if (data.length === 0) {
+        return {
+            success: false,
+            error: {
+                general: ["User not found"]
+            }
+        }
+    }
+    
+    if (data[0].id === userId) {
+        return {
+            success: false,
+            error: {
+                general: ["You cannot invite yourself"],
+            },
+        };
+    }
+
+    const existingMembership = await prisma.membership.findUnique({
+        where: {
+            workspaceId_userId: {
+                workspaceId: validationResult.data.workspaceId,
+                userId: data[0].id,
+            }
+        }
+    })
+
+    if (existingMembership) {
+        return {
+            success: false,
+            error: {
+                general: ["User is already a member"]
+            }
+        }
+    }
+
+    await prisma.membership.create({
+        data: {
+            workspaceId: validationResult.data.workspaceId,
+            userId: data[0].id,
+        },
+    });
+
+    revalidatePath(`/workspaces/${validationResult.data.workspaceId}/members`);
+
+    return {
+        success: true,
+    };
+
+}

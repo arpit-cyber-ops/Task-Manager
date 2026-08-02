@@ -1,8 +1,10 @@
 import prisma from "@/lib/prisma";
-import { clerkClient } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import MembersCard from "@/components/Members-Card";
+import InviteMemberDialog from "@/components/Invite-Member-Dialog";
 
 export default async function Members({ params }: { params: Promise<{ workspaceId: string }> }) {
+    const {userId} = await auth();
     const { workspaceId } = await params;
     const memberData = await prisma.membership.findMany({
         where: {
@@ -16,11 +18,11 @@ export default async function Members({ params }: { params: Promise<{ workspaceI
     });
     const userIds = memberData.map(member => member.userId);
     const client = await clerkClient();
-    const users = await client.users.getUserList({
+    const {data} = await client.users.getUserList({
         userId: userIds,
     });
     const memberProfiles = memberData.map(member => {
-        const user = users.data.find(user => member.userId === user.id)
+        const user = data.find(user => member.userId === user.id)
         if (!user) {
             throw new Error(`No Clerk user found for membership userId: ${member.userId}`);
         }
@@ -33,12 +35,13 @@ export default async function Members({ params }: { params: Promise<{ workspaceI
             joinedAt: member.joinedAt,
         }
     });
+    const owner = memberData.some(member => member.userId === userId && member.role === "OWNER")
 
     return (
         <div className="flex flex-col gap-4">
             <div className="flex justify-between px-4 py-6 text-center">
                 <h2 className="text-2xl">{`Workspace Members  (${memberProfiles.length})`}</h2>
-                <button className="border-2 border-black px-2 rounded-md">+ Invite Members</button>
+                {owner && <InviteMemberDialog workspaceId={workspaceId}/>}
             </div>
             <div className="flex flex-col border border-black rounded-md mx-4">
                 <div className="grid grid-cols-[2fr_3fr_1fr_1.5fr] py-4 px-6 text-center font-bold text-xl">
