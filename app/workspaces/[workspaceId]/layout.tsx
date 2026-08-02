@@ -27,17 +27,17 @@ export default async function WorkspaceLayout({children, params}: {children: Rea
     }
 
     return (
-        <div className="flex flex-col">
-            <div className="flex justify-between border p-4 items-center">
+        <div className="flex flex-col max-w-full border-black border-3">
+            <div className="flex justify-between p-4 items-center border-b border-black">
                 <p>Task-Manager</p>
                 <p>{workspace.name}</p>
-                <div className="flex gap-2 border-4 rounded-full px-2">
+                <div className="flex gap-2 border-4 rounded-full px-2 py-1">
                     <UserButton />
                     <p>{user?.firstName}</p>
                 </div>
             </div>
-            <div className="flex gap-8">
-                <div className="flex flex-col gap-4 p-4">
+            <div className="flex gap-6">
+                <div className="flex flex-col gap-4 py-4 px-8 w-70 border-r border-black min-h-screen">
                     <Link href={"/workspaces"}>
                         {`<- Workspaces`}
                     </Link>
@@ -48,7 +48,7 @@ export default async function WorkspaceLayout({children, params}: {children: Rea
                         Members
                     </Link>
                 </div>
-                <div>{children}</div>
+                <div className="flex-1">{children}</div>
             </div>
         </div>
     )
