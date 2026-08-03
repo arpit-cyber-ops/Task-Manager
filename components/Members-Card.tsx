@@ -1,9 +1,12 @@
 import Image from "next/image"
 import MemberProfile from "@/types/memberProfile"
-export default function MembersCard({ profile }: { profile: MemberProfile }) {
+import RemoveMemberDialog from "./Remove-Member-Dialog"
+export default function MembersCard({ profile, workspaceId, owner }: { profile: MemberProfile, workspaceId: string, owner: boolean }) {
+    const isMember = profile.role === "MEMBER" ? true : false;
+    
     return (
 
-        <div className="grid grid-cols-[2fr_3fr_1fr_1.5fr] px-6 py-4 border-t border-black text-center">
+        <div className={`grid ${owner ? "grid-cols-[2fr_3fr_1fr_1.5fr_1fr]" : "grid-cols-[2fr_3fr_1fr_1.5fr]"} px-6 py-4 border-t border-black text-center`}>
 
             <div className="flex gap-3 items-center">
                 <Image src={profile.imageUrl!} alt={profile.name!} width={32} height={32} className="rounded-full" />
@@ -23,6 +26,9 @@ export default function MembersCard({ profile }: { profile: MemberProfile }) {
             <div>
                 <p>{profile.joinedAt.toLocaleDateString()}</p>
             </div>
+            {owner && isMember &&
+                <div>{<RemoveMemberDialog profile={profile} workspaceId={workspaceId}/>}</div>
+            }
 
         </div>
 

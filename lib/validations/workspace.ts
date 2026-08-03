@@ -37,3 +37,13 @@ export const inviteMemberSchema = z.object({
         .trim()
         .cuid(),
 });
+
+export const removeMemberSchema = z.object({
+    workspaceId: z
+        .string()
+        .trim()
+        .cuid(),
+    targetUserId: z
+        .string()
+        .trim().min(1),
+});

@@ -1,9 +1,9 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema, inviteMemberSchema } from "@/lib/validations/workspace";
+import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema, inviteMemberSchema, removeMemberSchema } from "@/lib/validations/workspace";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { success, z } from "zod";
+import { z } from "zod";
 
 export async function createWorkspace(_previousState: unknown, formData: FormData) {
 
@@ -126,9 +126,9 @@ export async function deleteWorkspace(_previousState: unknown, formData: FormDat
 
     await prisma.workspace.delete({
         where: {
-            id: validationResult.data.workspaceId
-        }
-    })
+            id: validationResult.data.workspaceId,
+        },
+    });
 
     revalidatePath("/workspaces");
 
@@ -173,7 +173,7 @@ export async function inviteMember(_previousState: unknown, formData: FormData) 
                 general: ["Unable to Invite Member"],
             },
         };
-        
+
     }
 
     const client = await clerkClient();
@@ -190,7 +190,7 @@ export async function inviteMember(_previousState: unknown, formData: FormData) 
             }
         }
     }
-    
+
     if (data[0].id === userId) {
         return {
             success: false,
@@ -231,4 +231,91 @@ export async function inviteMember(_previousState: unknown, formData: FormData) 
         success: true,
     };
 
+}
+
+export async function removeMember(_previousState: unknown, formData: FormData) {
+    const { userId } = await auth();
+    if (!userId) {
+        throw new Error("You're not authenticated");
+    }
+    const data = Object.fromEntries(formData);
+    const validationResult = removeMemberSchema.safeParse(data);
+    if (!validationResult.success) {
+        return {
+            success: false,
+            error: {
+                general: ["User not found"],
+            },
+        };
+    }
+    const requesterMembership = await prisma.membership.findUnique({
+        where: {
+            workspaceId_userId: {
+                workspaceId: validationResult.data.workspaceId,
+                userId,
+            },
+        },
+    });
+    if (!requesterMembership) {
+        return {
+            success: false,
+            error: {
+                general: ["Unable to remove member"],
+            },
+        };
+    }
+    if (requesterMembership.role !== "OWNER") {
+        return {
+            success: false,
+            error: {
+                general: ["Only owner can remove members"],
+            },
+        }
+    }
+
+    const targetMembership = await prisma.membership.findUnique({
+        where: {
+            workspaceId_userId: {
+                workspaceId: validationResult.data.workspaceId,
+                userId: validationResult.data.targetUserId,
+            },
+        },
+    });
+
+    if (!targetMembership) {
+        return {
+            success: false,
+            error: {
+                general: ["Member not found"]
+            }
+        }
+    }
+    if (targetMembership.userId === userId) {
+        return {
+            success: false,
+            error: {
+                general: ["You cannot remove yourself"]
+            }
+        }
+    }
+    if (targetMembership.role !== "MEMBER") {
+        return {
+            success: false,
+            error: {
+                general: ["You cannot remove an owner."]
+            }
+        }
+    }
+
+    await prisma.membership.delete({
+        where: {
+            id: targetMembership.id
+        }
+    });
+
+    revalidatePath(`/workspaces/${validationResult.data.workspaceId}/members`);
+
+    return {
+        success: true,
+    };
 }

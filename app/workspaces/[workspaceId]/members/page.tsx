@@ -44,7 +44,7 @@ export default async function Members({ params }: { params: Promise<{ workspaceI
                 {owner && <InviteMemberDialog workspaceId={workspaceId}/>}
             </div>
             <div className="flex flex-col border border-black rounded-md mx-4">
-                <div className="grid grid-cols-[2fr_3fr_1fr_1.5fr] py-4 px-6 text-center font-bold text-xl">
+                <div className={`grid ${owner ? "grid-cols-[2fr_3fr_1fr_1.5fr_1fr]" : "grid-cols-[2fr_3fr_1fr_1.5fr]"} py-4 px-6 text-center font-bold text-xl`}>
                     <p className="text-start">Name</p>
                     <p className="text-start">Email</p>
                     <p className="">Role</p>
@@ -52,7 +52,7 @@ export default async function Members({ params }: { params: Promise<{ workspaceI
                 </div>
                 {
                     memberProfiles.map((profile) => (
-                        <MembersCard profile={profile} key={profile.id} />
+                        <MembersCard profile={profile} key={profile.id} workspaceId={workspaceId} owner={owner}/>
                     ))
                 }
             </div>
