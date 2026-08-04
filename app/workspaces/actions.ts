@@ -1,8 +1,9 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema, inviteMemberSchema, removeMemberSchema } from "@/lib/validations/workspace";
+import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema, inviteMemberSchema, removeMemberSchema, leaveWorkspaceSchema } from "@/lib/validations/workspace";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation"
 import { z } from "zod";
 
 export async function createWorkspace(_previousState: unknown, formData: FormData) {
@@ -318,4 +319,59 @@ export async function removeMember(_previousState: unknown, formData: FormData) 
     return {
         success: true,
     };
+}
+
+export async function leaveWorkspace(_previousState: unknown, formData: FormData) {
+
+    const {userId} = await auth();
+    if (!userId) {
+        throw new Error("You're not authenticated");
+    }
+
+    const data = Object.fromEntries(formData);
+    const validationResult = leaveWorkspaceSchema.safeParse(data);
+    if (!validationResult.success) {
+        return {
+            success: false,
+            error: {
+                general: ["Unable to leave workspace"],
+            },
+        };
+    }
+
+    const membership = await prisma.membership.findUnique({
+        where: {
+            workspaceId_userId: {
+                workspaceId: validationResult.data.workspaceId,
+                userId,
+            },
+        },
+    });
+
+    if (!membership) {
+        return {
+            success: false,
+            error: {
+                general: ["You're not a member"],
+            },
+        };
+    }
+
+    if (membership.role === "OWNER") {
+        return {
+            success: false,
+            error: {
+                general: ["Owners cannot leave the workspace."],
+            },
+        };
+    }
+
+    await prisma.membership.delete({
+        where: {
+            id: membership.id,
+        },
+    });
+
+    redirect("/workspaces");
+
 }

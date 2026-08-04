@@ -47,3 +47,10 @@ export const removeMemberSchema = z.object({
         .string()
         .trim().min(1),
 });
+
+export const leaveWorkspaceSchema = z.object({
+    workspaceId: z
+        .string()
+        .trim()
+        .cuid(),
+});

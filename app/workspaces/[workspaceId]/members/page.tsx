@@ -2,9 +2,13 @@ import prisma from "@/lib/prisma";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import MembersCard from "@/components/Members-Card";
 import InviteMemberDialog from "@/components/Invite-Member-Dialog";
+import LeaveWorkspaceDialog from "@/components/Leave-Workspace-Dialog";
 
 export default async function Members({ params }: { params: Promise<{ workspaceId: string }> }) {
     const {userId} = await auth();
+    if (!userId) {
+        throw new Error("You're not authenticated");
+    }
     const { workspaceId } = await params;
     const memberData = await prisma.membership.findMany({
         where: {
@@ -41,7 +45,7 @@ export default async function Members({ params }: { params: Promise<{ workspaceI
         <div className="flex flex-col gap-4">
             <div className="flex justify-between px-4 py-6 text-center">
                 <h2 className="text-2xl">{`Workspace Members  (${memberProfiles.length})`}</h2>
-                {owner && <InviteMemberDialog workspaceId={workspaceId}/>}
+                {owner ? <InviteMemberDialog workspaceId={workspaceId}/> : <LeaveWorkspaceDialog workspaceId={workspaceId}/>}
             </div>
             <div className="flex flex-col border border-black rounded-md mx-4">
                 <div className={`grid ${owner ? "grid-cols-[2fr_3fr_1fr_1.5fr_1fr]" : "grid-cols-[2fr_3fr_1fr_1.5fr]"} py-4 px-6 text-center font-bold text-xl`}>
