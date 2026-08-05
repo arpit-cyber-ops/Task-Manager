@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema, inviteMemberSchema, removeMemberSchema, leaveWorkspaceSchema } from "@/lib/validations/workspace";
+import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema, inviteMemberSchema, removeMemberSchema, leaveWorkspaceSchema, createTaskSchema } from "@/lib/validations/workspace";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation"
@@ -373,5 +373,53 @@ export async function leaveWorkspace(_previousState: unknown, formData: FormData
     });
 
     redirect("/workspaces");
+
+}
+
+export async function createTask(_previousState: unknown, formData: FormData) {
+    const { userId } = await auth();
+    if (!userId) {
+        throw new Error("You're not authenticated");
+    }
+
+    const data = Object.fromEntries(formData);
+    const validationResult = createTaskSchema.safeParse(data);
+
+    if (!validationResult.success) {
+
+        return {
+            success: false,
+            errors: z.flattenError(validationResult.error).fieldErrors,
+        };
+
+    }
+
+    const membership = await prisma.membership.findUnique({
+        where: {
+            workspaceId_userId: {
+                workspaceId: validationResult.data.workspaceId,
+                userId,
+            }
+        }
+    })
+
+    if (!membership) {
+        return {
+            success: false,
+        };
+    }
+
+    await prisma.task.create({
+        data: {
+            title: validationResult.data.title,
+            workspaceId: validationResult.data.workspaceId,
+        },
+    });
+
+    revalidatePath(`/workspaces/${validationResult.data.workspaceId}/tasks`);
+
+    return {
+        success: true,
+    };
 
 }

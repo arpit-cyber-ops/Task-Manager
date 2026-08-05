@@ -54,3 +54,15 @@ export const leaveWorkspaceSchema = z.object({
         .trim()
         .cuid(),
 });
+
+export const createTaskSchema = z.object({
+    title: z
+        .string()
+        .trim()
+        .min(3, "Task name must be at least 3 characters")
+        .max(50, "Task name must be at most 50 characters"),
+    workspaceId: z
+        .string()
+        .trim()
+        .cuid(),
+})
