@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema, inviteMemberSchema, removeMemberSchema, leaveWorkspaceSchema, createTaskSchema } from "@/lib/validations/workspace";
+import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema, inviteMemberSchema, removeMemberSchema, leaveWorkspaceSchema, createTaskSchema, completeTaskSchema } from "@/lib/validations/workspace";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation"
@@ -423,3 +423,75 @@ export async function createTask(_previousState: unknown, formData: FormData) {
     };
 
 }
+
+export async function completeTask(taskId: string, completed: boolean) {
+    console.log(completed);
+    const {userId} = await auth();
+    if (!userId) {
+        throw new Error("You're not authenticated");
+    }
+    const validationResult = completeTaskSchema.safeParse({
+        taskId,
+        completed,
+    });
+    if (!validationResult.success) {
+        return {
+            success: false,
+            error: {
+                general: ["Unable to toggle"],
+            },
+        };
+    }
+
+    const taskWorkspace = await prisma.task.findUnique({
+        where: {
+            id: validationResult.data.taskId,
+        },
+        select: {
+            workspaceId: true,
+        },
+    });
+
+    if (!taskWorkspace) {
+        return {
+            success: false,
+            error: {
+                general: ["Task not found"]
+            }
+        }
+    }
+
+    const membership = await prisma.membership.findUnique({
+        where: {
+            workspaceId_userId: {
+                workspaceId: taskWorkspace.workspaceId,
+                userId,
+            }
+        },
+    });
+
+    if (!membership) {
+        return {
+            success: false,
+            error: {
+                general: ["You cannot toggle this task"],
+            },
+        };
+    }
+
+    await prisma.task.update({
+        data: {
+            completed,
+        },
+        where: {
+            id: validationResult.data.taskId,
+        },
+    });
+    
+    revalidatePath(`/workspaces/${taskWorkspace.workspaceId}/tasks`);
+
+    return {
+        success: true,
+    };
+
+}   

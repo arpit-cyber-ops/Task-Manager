@@ -66,3 +66,8 @@ export const createTaskSchema = z.object({
         .trim()
         .cuid(),
 })
+
+export const completeTaskSchema = z.object({
+    taskId: z.string().trim().cuid(),
+    completed: z.boolean(),
+});
