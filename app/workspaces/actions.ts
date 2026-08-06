@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema, inviteMemberSchema, removeMemberSchema, leaveWorkspaceSchema, createTaskSchema, completeTaskSchema } from "@/lib/validations/workspace";
+import { createWorkspaceSchema, renameWorkspaceSchema, deleteWorkspaceSchema, inviteMemberSchema, removeMemberSchema, leaveWorkspaceSchema, createTaskSchema, completeTaskSchema, renameTaskSchema } from "@/lib/validations/workspace";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation"
@@ -494,4 +494,71 @@ export async function completeTask(taskId: string, completed: boolean) {
         success: true,
     };
 
-}   
+}
+
+export async function renameTask(_previousState: unknown, formData: FormData) {
+    const { userId } = await auth();
+    if (!userId) {
+        throw new Error("You're not authenticated");
+    }
+
+    const data = Object.fromEntries(formData);
+    const validationResult = renameTaskSchema.safeParse(data);
+    if (!validationResult.success) {
+        return {
+            success: false,
+            errors: z.flattenError(validationResult.error).fieldErrors,
+        };
+    }
+    const taskWorkspace = await prisma.task.findUnique({
+        where: {
+            id: validationResult.data.taskId,
+        },
+        select: {
+            workspaceId: true,
+        },
+    });
+
+    if (!taskWorkspace) {
+        return {
+            success: false,
+            error: {
+                general: ["Task not found"]
+            }
+        }
+    }
+
+    const membership = await prisma.membership.findUnique({
+        where: {
+            workspaceId_userId: {
+                workspaceId: taskWorkspace.workspaceId,
+                userId,
+            }
+        },
+    });
+
+    if (!membership) {
+        return {
+            success: false,
+            error: {
+                general: ["You cannot rename this task"],
+            },
+        };
+    }
+
+    await prisma.task.update({
+        data: {
+            title: validationResult.data.title,
+        },
+        where: {
+            id: validationResult.data.taskId,
+        }
+    })
+
+    revalidatePath(`/workspaces/${taskWorkspace.workspaceId}/tasks`);
+
+    return {
+        success: true,
+    };
+}
+

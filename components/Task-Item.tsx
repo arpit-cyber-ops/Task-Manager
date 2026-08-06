@@ -7,7 +7,8 @@ export default function TaskItem({ task }: { task: Task }) {
         <div className="flex gap-4 border-t rounded-md p-4">
             <TaskCheckbox taskId={task.id} completed={task.completed}/>
             <p>{task.title}</p>
-            <TaskActions />
+            <TaskActions taskId={task.id} title={task.title}/>
         </div>
     )
 }
+
