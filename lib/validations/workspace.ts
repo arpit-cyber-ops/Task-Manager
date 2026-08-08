@@ -84,3 +84,10 @@ export const renameTaskSchema = z.object({
         .cuid(),
 });
 
+export const deleteTaskSchema = z.object({
+    taskId: z
+        .string()
+        .trim()
+        .cuid(),
+});
+

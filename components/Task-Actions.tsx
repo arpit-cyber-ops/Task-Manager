@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import RenameTaskDialog from "./Rename-Task-Dialog";
+import DeleteTaskDialog from "./Delete-Task-Dialog";
 
 export default function TaskActions({ taskId, title }: { taskId: string, title: string }) {
 
     const [renameOpen, setRenameOpen] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
 
     return (
 
@@ -28,7 +30,9 @@ export default function TaskActions({ taskId, title }: { taskId: string, title: 
 
                     <hr className="border-black" />
 
-                    <DropdownMenuItem className="cursor-pointer text-sm font-bold p-1">
+                    <DropdownMenuItem
+                        className="cursor-pointer text-sm font-bold p-1"
+                        onClick={() => setDeleteOpen(true)}>
                         Delete
                     </DropdownMenuItem>
 
@@ -37,6 +41,7 @@ export default function TaskActions({ taskId, title }: { taskId: string, title: 
             </DropdownMenu>
 
             <RenameTaskDialog taskId={taskId} title={title} open={renameOpen} onOpenChange={setRenameOpen} />
+            <DeleteTaskDialog taskId={taskId} open={deleteOpen} onOpenChange={setDeleteOpen} />
 
         </div>
     )
