@@ -1,36 +1,113 @@
 import Image from "next/image"
 import MemberProfile from "@/types/memberProfile"
 import RemoveMemberDialog from "./Remove-Member-Dialog"
-export default function MembersCard({ profile, workspaceId, owner }: { profile: MemberProfile, workspaceId: string, owner: boolean }) {
-    const isMember = profile.role === "MEMBER" ? true : false;
-    
+
+export default function MembersCard({
+    profile,
+    workspaceId,
+    owner,
+}: {
+    profile: MemberProfile
+    workspaceId: string
+    owner: boolean
+}) {
+    const isMember = profile.role === "MEMBER"
+
     return (
+        <>
+            {/* Desktop */}
+            <div
+                className={`hidden items-center gap-4 border-t border-border px-6 py-4 text-center md:grid ${
+                    owner
+                        ? "md:grid-cols-[minmax(180px,2fr)_minmax(220px,3fr)_100px_120px_80px]"
+                        : "md:grid-cols-[minmax(180px,2fr)_minmax(220px,3fr)_100px_120px]"
+                }`}
+            >
+                <div className="flex min-w-0 items-center gap-3 text-left">
+                    <Image
+                        src={profile.imageUrl!}
+                        alt={profile.name!}
+                        width={40}
+                        height={40}
+                        className="size-10 shrink-0 rounded-full"
+                    />
 
-        <div className={`grid ${owner ? "grid-cols-[2fr_3fr_1fr_1.5fr_1fr]" : "grid-cols-[2fr_3fr_1fr_1.5fr]"} px-6 py-4 border-t border-black text-center`}>
+                    <p className="truncate text-sm font-medium">
+                        {profile.name}
+                    </p>
+                </div>
 
-            <div className="flex gap-3 items-center">
-                <Image src={profile.imageUrl!} alt={profile.name!} width={32} height={32} className="rounded-full" />
-                <p className="text-xl">{profile.name}</p>
+                <div className="min-w-0 text-start">
+                    <p className="truncate text-sm text-muted-foreground">
+                        {profile.email}
+                    </p>
+                </div>
+
+                <div className="flex justify-center">
+                    <span className="inline-flex rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                        {profile.role === "OWNER" ? "👑 Owner" : "Member"}
+                    </span>
+                </div>
+
+                <div>
+                    <p className="text-sm text-muted-foreground">
+                        {profile.joinedAt.toLocaleDateString()}
+                    </p>
+                </div>
+
+                {owner && isMember && (
+                    <div className="flex justify-center">
+                        <RemoveMemberDialog
+                            profile={profile}
+                            workspaceId={workspaceId}
+                        />
+                    </div>
+                )}
             </div>
 
-            <div className="text-start">
-                <p className="text-md">{profile.email}</p>
+            {/* Mobile */}
+            <div className="flex items-start justify-between gap-3 border-t border-border p-4 md:hidden">
+                <div className="flex min-w-0 items-start gap-3">
+                    <Image
+                        src={profile.imageUrl!}
+                        alt={profile.name!}
+                        width={40}
+                        height={40}
+                        className="size-10 shrink-0 rounded-full"
+                    />
+
+                    <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold">
+                            {profile.name}
+                        </p>
+
+                        <p className="mt-1 break-all text-sm text-muted-foreground">
+                            {profile.email}
+                        </p>
+
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
+                            <span className="inline-flex rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                                {profile.role === "OWNER"
+                                    ? "👑 Owner"
+                                    : "Member"}
+                            </span>
+
+                            <span className="text-xs text-muted-foreground">
+                                {profile.joinedAt.toLocaleDateString()}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {owner && isMember && (
+                    <div className="shrink-0">
+                        <RemoveMemberDialog
+                            profile={profile}
+                            workspaceId={workspaceId}
+                        />
+                    </div>
+                )}
             </div>
-
-            <div className="flex justify-center">
-                <span className="border border-black p-1 rounded-lg">
-                    {profile.role === "OWNER" ? "👑 Owner" : "Member"}
-                </span>
-            </div>
-
-            <div>
-                <p>{profile.joinedAt.toLocaleDateString()}</p>
-            </div>
-            {owner && isMember &&
-                <div>{<RemoveMemberDialog profile={profile} workspaceId={workspaceId}/>}</div>
-            }
-
-        </div>
-
+        </>
     )
 }

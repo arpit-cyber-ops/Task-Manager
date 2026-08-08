@@ -2,9 +2,9 @@ import CreateTaskDialog from "@/components/Create-Task-Dialog";
 import TaskList from "@/components/Task-List";
 import prisma from "@/lib/prisma";
 
-export default async function Tasks({params}: {params: Promise<{workspaceId: string}>}) {
-    
-    const {workspaceId} = await params;
+export default async function Tasks({ params }: { params: Promise<{ workspaceId: string }> }) {
+
+    const { workspaceId } = await params;
 
     const tasks = await prisma.task.findMany({
         where: {
@@ -19,13 +19,13 @@ export default async function Tasks({params}: {params: Promise<{workspaceId: str
     });
 
     return (
-        <div>
-            <div className="flex justify-between py-4 items-center w-295">
-                <h2 className="text-3xl">Task List</h2>
-                <CreateTaskDialog workspaceId={workspaceId}/>
+        <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <h2 className="text-2xl font-semibold tracking-tight">Tasks</h2>
+                <CreateTaskDialog workspaceId={workspaceId} />
             </div>
-            
-            <TaskList tasks={tasks}/>
+
+            <TaskList tasks={tasks} />
         </div>
     )
 }

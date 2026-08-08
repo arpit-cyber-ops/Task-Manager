@@ -12,15 +12,15 @@ export default function WorkspaceActions({ workspace }: { workspace: WorkspaceWi
         <div>
             <DropdownMenu>
                 <DropdownMenuTrigger
-                render={<button className="rounded-md hover:bg-slate-400 py-1 px-2 cursor-pointer">⋮</button>}/>
-                <DropdownMenuContent className="bg-slate-200 ">
+                    render={<button className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">⋮</button>} />
+                <DropdownMenuContent>
                     {workspace.memberships[0].role === "OWNER" &&
                         <>
-                            <DropdownMenuItem className="cursor-pointer text-md font-bold p-1.5" onClick={() => setRenameOpen(true)}>
+                            <DropdownMenuItem className="cursor-pointer" onClick={() => setRenameOpen(true)}>
                                 Rename
                             </DropdownMenuItem>
-                            <hr className="border-black"/>
-                            <DropdownMenuItem className="cursor-pointer text-md font-bold p-1.5" onClick={() => setDeleteOpen(true)}>
+                            <hr className="border-border" />
+                            <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive" onClick={() => setDeleteOpen(true)}>
                                 Delete
                             </DropdownMenuItem>
                         </>

@@ -5,7 +5,7 @@ import InviteMemberDialog from "@/components/Invite-Member-Dialog";
 import LeaveWorkspaceDialog from "@/components/Leave-Workspace-Dialog";
 
 export default async function Members({ params }: { params: Promise<{ workspaceId: string }> }) {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
         throw new Error("You're not authenticated");
     }
@@ -22,7 +22,7 @@ export default async function Members({ params }: { params: Promise<{ workspaceI
     });
     const userIds = memberData.map(member => member.userId);
     const client = await clerkClient();
-    const {data} = await client.users.getUserList({
+    const { data } = await client.users.getUserList({
         userId: userIds,
     });
     const memberProfiles = memberData.map(member => {
@@ -42,21 +42,26 @@ export default async function Members({ params }: { params: Promise<{ workspaceI
     const owner = memberData.some(member => member.userId === userId && member.role === "OWNER")
 
     return (
-        <div className="flex flex-col gap-4">
-            <div className="flex justify-between px-4 py-6 text-center">
-                <h2 className="text-2xl">{`Workspace Members  (${memberProfiles.length})`}</h2>
-                {owner ? <InviteMemberDialog workspaceId={workspaceId}/> : <LeaveWorkspaceDialog workspaceId={workspaceId}/>}
+        <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <h2 className="text-2xl font-semibold tracking-tight">{`Workspace Members  (${memberProfiles.length})`}</h2>
+                {owner ? <InviteMemberDialog workspaceId={workspaceId} /> : <LeaveWorkspaceDialog workspaceId={workspaceId} />}
             </div>
-            <div className="flex flex-col border border-black rounded-md mx-4">
-                <div className={`grid ${owner ? "grid-cols-[2fr_3fr_1fr_1.5fr_1fr]" : "grid-cols-[2fr_3fr_1fr_1.5fr]"} py-4 px-6 text-center font-bold text-xl`}>
+            <div className="overflow-hidden rounded-xl border border-border bg-card">
+                <div
+                    className={`hidden items-center gap-4 px-6 py-4 text-center text-sm font-medium text-muted-foreground md:grid ${owner
+                            ? "md:grid-cols-[minmax(180px,2fr)_minmax(220px,3fr)_100px_120px_80px]"
+                            : "md:grid-cols-[minmax(180px,2fr)_minmax(220px,3fr)_100px_120px]"
+                        }`}
+                >
                     <p className="text-start">Name</p>
                     <p className="text-start">Email</p>
-                    <p className="">Role</p>
+                    <p>Role</p>
                     <p>Joined</p>
                 </div>
                 {
                     memberProfiles.map((profile) => (
-                        <MembersCard profile={profile} key={profile.id} workspaceId={workspaceId} owner={owner}/>
+                        <MembersCard profile={profile} key={profile.id} workspaceId={workspaceId} owner={owner} />
                     ))
                 }
             </div>

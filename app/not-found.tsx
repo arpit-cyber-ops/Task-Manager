@@ -1,7 +1,15 @@
 export default function NotFound() {
     return (
-        <div className="flex items-center justify-center h-screen bg-black"> 
-            <h1 className="text-4xl text-white">OOPS, the workspace you're looking for does not exist!!</h1>
+        <div className="flex min-h-screen items-center justify-center bg-background px-4">
+            <div className="text-center">
+                <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                    Workspace not found
+                </h1>
+
+                <p className="mt-2 text-sm text-muted-foreground">
+                    The workspace you're looking for doesn't exist or you don't have access to it.
+                </p>
+            </div>
         </div>
     );
 }

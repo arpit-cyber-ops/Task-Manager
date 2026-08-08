@@ -8,24 +8,26 @@ interface WorkspaceProps {
 
 export default function WorkspaceCard({ workspace }: WorkspaceProps) {
     return (
-        <div className="border-4 rounded-md flex flex-col p-4 gap-4 bg-slate-300 hover:scale-101 transition-transform">
-            <Link href={`/workspaces/${workspace.id}/tasks`} className="hover:bg-slate-400 px-2">
-                <p className="truncate text-xl" title={workspace.name}>{workspace.name}</p>
+        <div className="flex min-w-0 flex-col gap-2 rounded-xl border border-border bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+            <Link
+                href={`/workspaces/${workspace.id}/tasks`}
+                className="min-w-0">
+                <p className="truncate text-base font-semibold" title={workspace.name}>{workspace.name}</p>
             </Link>
-            <hr className="border border-black" />
-            <div className="flex justify-between items-center">
-                <div className="mt-auto">
-                    <p className="text-md">
+            <hr className="border-border" />
+            <div className="flex items-end justify-between gap-4">
+                <div className="space-y-1 text-sm text-muted-foreground">
+                    <p className="text-sm">
                         {workspace._count.tasks}
                         {workspace._count.tasks > 1 ? " Tasks" : " Task"}
                     </p>
-                    <p className="text-md">
+                    <p className="text-sm">
                         {workspace._count.memberships}
                         {workspace._count.memberships > 1 ? " Members" : " Member"}
                     </p>
                 </div>
                 <div>
-                    <WorkspaceActions workspace={workspace}/>
+                    <WorkspaceActions workspace={workspace} />
                 </div>
             </div>
         </div>

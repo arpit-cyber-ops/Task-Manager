@@ -17,21 +17,21 @@ export default function TaskActions({ taskId, title }: { taskId: string, title: 
             <DropdownMenu>
 
                 <DropdownMenuTrigger
-                    render={<button className="rounded-md hover:bg-slate-300 py-0.5 px-1 cursor-pointer">⋮</button>}
+                    render={<button className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">⋮</button>}
                 />
 
-                <DropdownMenuContent className="bg-slate-200 ">
+                <DropdownMenuContent>
 
                     <DropdownMenuItem
-                        className="cursor-pointer text-sm font-bold p-1"
+                        className="cursor-pointer"
                         onClick={() => setRenameOpen(true)}>
                         Rename
                     </DropdownMenuItem>
 
-                    <hr className="border-black" />
+                    <hr className="border-border" />
 
                     <DropdownMenuItem
-                        className="cursor-pointer text-sm font-bold p-1"
+                        className="cursor-pointer text-destructive focus:text-destructive"
                         onClick={() => setDeleteOpen(true)}>
                         Delete
                     </DropdownMenuItem>

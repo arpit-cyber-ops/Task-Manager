@@ -9,8 +9,8 @@ export default function RemoveMemberDialog({profile, workspaceId}: {profile: Mem
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger 
-            render={<button className="text-md bg-gray-300 cursor-pointer border-2 border-black rounded-full p-1 hover:bg-violet-300 transition-transform">Remove</button>}/>
-            <DialogContent>
+            render={<button className="rounded-md border border-border px-3 py-2 text-sm font-medium transition-colors hover:bg-muted">Remove</button>}/>
+            <DialogContent className="w-[calc(100%-2rem)] rounded-xl bg-card sm:max-w-md">
                 <RemoveMemberForm profile={profile} onClose={() => setOpen(false)} workspaceId={workspaceId}/>
             </DialogContent>
         </Dialog>

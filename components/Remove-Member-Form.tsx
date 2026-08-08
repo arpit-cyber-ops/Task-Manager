@@ -14,39 +14,38 @@ export default function RemoveMemberForm({ profile, onClose, workspaceId }: { pr
         <form action={formAction}>
 
             <div className="flex flex-col gap-2">
-                
-                <h2 className="text-xl text-center font-bold">Remove User?</h2>
+
+                <h2 className="text-lg font-semibold">Remove User?</h2>
                 <p className="text-lg">{`This will permanently remove ${profile.name} from this workspace.`}</p>
                 <p className="text-lg font-bold">This action cannot be undone.</p>
 
             </div>
 
             <input type="hidden" value={profile.id} name="targetUserId" />
-            
+
             <input type="hidden" value={workspaceId} name="workspaceId" />
 
             {
                 state?.error?.general &&
-                <p className="bg-red-500 p-2 rounded-md text-[15px] font-bold">
+                <p className="rounded-md border border-destructive/20 bg-destructive/10 p-3 text-sm font-medium text-destructive">
                     {state?.error?.general}
                 </p>
             }
 
-            <div className="flex justify-end text-lg gap-8 py-2 px-4">
+            <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
 
-                {!isPending &&
 
-                    <button
-                        onClick={onClose}
-                        className="text-lg border-2 border-black rounded-full px-2 cursor-pointer hover:bg-gray-400 hover:scale-102 transition-transform"
-                        type="button"
-                        disabled={isPending}>
-                        Cancel
-                    </button>}
+                <button
+                    onClick={onClose}
+                    className="rounded-md border border-border px-3 py-2 text-sm font-medium transition-colors hover:bg-muted"
+                    type="button"
+                    disabled={isPending}>
+                    Cancel
+                </button>
 
                 <button
                     type="submit"
-                    className={`text-lg border-2 border-black rounded-full px-2 cursor-pointer ${!isPending && `hover:bg-gray-400 hover:scale-102 transition-transform`}`}
+                    className="rounded-md bg-destructive px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-destructive/90"
                     disabled={isPending}>
                     {isPending ? "Removing..." : "Remove"}
                 </button>
