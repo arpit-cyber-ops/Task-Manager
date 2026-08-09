@@ -5,9 +5,9 @@ export default async function getWorkspaceForUser(workspaceId: string, userId: s
             id: workspaceId,
             memberships: {
                 some: {
-                    userId: userId!
-                }
-            }
+                    userId: userId,
+                },
+            },
         },
     });
     return workspace;

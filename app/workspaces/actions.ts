@@ -425,7 +425,7 @@ export async function createTask(_previousState: unknown, formData: FormData) {
 }
 
 export async function completeTask(taskId: string, completed: boolean) {
-    console.log(completed);
+
     const {userId} = await auth();
     if (!userId) {
         throw new Error("You're not authenticated");
