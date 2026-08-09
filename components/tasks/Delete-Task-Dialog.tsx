@@ -1,7 +1,7 @@
 "use client"
 
 import DeleteTaskForm from "./Delete-Task-Form";
-import { Dialog, DialogContent } from "./ui/dialog";
+import { Dialog, DialogContent } from "../ui/dialog";
 
 export default function DeleteTaskDialog({ taskId, open, onOpenChange }: { taskId: string, open: boolean, onOpenChange: (open: boolean) => void}) {
     return (

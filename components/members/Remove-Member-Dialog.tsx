@@ -1,7 +1,7 @@
 "use client"
 import MemberProfile from "@/types/memberProfile";
 import RemoveMemberForm from "./Remove-Member-Form";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { useState } from "react";
 
 export default function RemoveMemberDialog({profile, workspaceId}: {profile: MemberProfile, workspaceId: string}) {

@@ -1,3 +1,4 @@
+"use client"
 import { leaveWorkspace } from "@/app/workspaces/actions";
 import { useActionState } from "react"
 

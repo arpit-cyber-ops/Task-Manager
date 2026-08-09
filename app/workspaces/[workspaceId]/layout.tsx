@@ -1,9 +1,33 @@
-import prisma from "@/lib/prisma";
+import getWorkspaceForUser from "@/lib/workspace";
 import { UserButton } from "@clerk/nextjs";
 import { auth, currentUser } from "@clerk/nextjs/server"
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
+export async function generateMetadata({ params }: { params: Promise<{ workspaceId: string }> }) {
+    const { userId } = await auth();
+    if (!userId) {
+        throw new Error("You're not authenticated");
+    }
+
+    const { workspaceId } = await params;
+
+    const workspace = await getWorkspaceForUser(workspaceId, userId);
+    if (!workspace) {
+        notFound();
+    }
+
+    const metadata: Metadata = {
+        title: {
+            default: workspace.name,
+            template: `%s | ${workspace.name}`
+        },
+        description: "A collaborative task management application.",
+    };
+
+    return metadata;
+}
 
 export default async function WorkspaceLayout({ children, params }: { children: React.ReactNode, params: Promise<{ workspaceId: string }> }) {
     await auth.protect();
@@ -11,16 +35,7 @@ export default async function WorkspaceLayout({ children, params }: { children: 
     const { workspaceId } = await params;
     const { userId } = await auth();
 
-    const workspace = await prisma.workspace.findFirst({
-        where: {
-            id: workspaceId,
-            memberships: {
-                some: {
-                    userId: userId!
-                }
-            }
-        },
-    });
+    const workspace = await getWorkspaceForUser(workspaceId, userId!);
 
     if (!workspace) {
         notFound();
@@ -96,3 +111,4 @@ export default async function WorkspaceLayout({ children, params }: { children: 
 
     )
 }
+

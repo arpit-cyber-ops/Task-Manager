@@ -1,6 +1,6 @@
 "use client"
 import { WorkspaceWithCounts } from "@/types/workspace";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { useState } from "react";
 import RenameWorkspaceDialog from "./Rename-Workspace-Dialog";
 import DeleteWorkspaceDialog from "./Delete-Workspace-Dialog";

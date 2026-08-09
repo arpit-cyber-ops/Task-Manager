@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import CreateTaskForm from "./Create-Task-Form";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
 export default function CreateTaskDialog({ workspaceId }: { workspaceId: string }) {
     const [open, setOpen] = useState(false);

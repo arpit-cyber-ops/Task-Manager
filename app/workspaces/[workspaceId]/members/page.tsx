@@ -1,8 +1,13 @@
 import prisma from "@/lib/prisma";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import MembersCard from "@/components/Members-Card";
-import InviteMemberDialog from "@/components/Invite-Member-Dialog";
-import LeaveWorkspaceDialog from "@/components/Leave-Workspace-Dialog";
+import MembersCard from "@/components/members/Members-Card";
+import InviteMemberDialog from "@/components/members/Invite-Member-Dialog";
+import LeaveWorkspaceDialog from "@/components/workspace/Leave-Workspace-Dialog";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Members",
+}
 
 export default async function Members({ params }: { params: Promise<{ workspaceId: string }> }) {
     const { userId } = await auth();

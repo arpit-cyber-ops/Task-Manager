@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import LeaveWorkspaceForm from "./Leave-Workspace-Form";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
 export default function LeaveWorkspaceDialog({workspaceId}: {workspaceId: string}) {
     const [open, setOpen] = useState(false);

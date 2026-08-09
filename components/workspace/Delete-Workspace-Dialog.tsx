@@ -1,7 +1,7 @@
 "use client"
 import { WorkspaceWithCounts } from "@/types/workspace";
 import DeleteWorkspaceForm from "./Delete-Workspace-Form";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
 export default function DeleteWorkspaceDialog({workspace, open, onOpenChange}: {workspace: WorkspaceWithCounts, open: boolean, onOpenChange: (open: boolean) => void}) {
     return (

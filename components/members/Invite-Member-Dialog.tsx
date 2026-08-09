@@ -1,8 +1,7 @@
 "use client"
 import { useState } from "react";
 import InviteMemberForm from "./Invite-Member-Form";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
-
+import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 export default function InviteMemberDialog({workspaceId}: {workspaceId: string}) {
     const [open, setOpen] = useState(false);
     return (

@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { WorkspaceWithCounts } from "@/types/workspace";
 import RenameWorkspaceForm from "./Rename-Workspace-Form";
 

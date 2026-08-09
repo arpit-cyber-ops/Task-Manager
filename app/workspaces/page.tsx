@@ -1,8 +1,8 @@
-import Homepage_Header from "@/components/Homepage-Header";
+import Homepage_Header from "@/components/workspace/Homepage-Header";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma"
-import WorkspaceCard from "@/components/workspacecard";
-import TitleBar from "@/components/Title-Bar";
+import WorkspaceCard from "@/components/workspace/workspacecard";
+import TitleBar from "@/components/workspace/Title-Bar";
 
 export default async function Workspace() {
 

@@ -1,6 +1,6 @@
 "use client"
 import RenameTaskForm from "./Rename-Task-Form";
-import { Dialog, DialogContent } from "./ui/dialog";
+import { Dialog, DialogContent } from "../ui/dialog";
 
 export default function RenameTaskDialog({taskId, title, open, onOpenChange}: {taskId: string, title: string, open: boolean, onOpenChange: (open: boolean) => void}) {
     return (

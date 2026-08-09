@@ -1,3 +1,4 @@
+"use client"
 import { createWorkspace } from "@/app/workspaces/actions"
 import { useActionState, useEffect } from "react"
 

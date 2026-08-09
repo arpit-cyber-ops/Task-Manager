@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import RenameTaskDialog from "./Rename-Task-Dialog";
 import DeleteTaskDialog from "./Delete-Task-Dialog";
 

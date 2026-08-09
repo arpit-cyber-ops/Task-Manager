@@ -1,6 +1,11 @@
-import CreateTaskDialog from "@/components/Create-Task-Dialog";
-import TaskList from "@/components/Task-List";
+import CreateTaskDialog from "@/components/tasks/Create-Task-Dialog";
+import TaskList from "@/components/tasks/Task-List";
 import prisma from "@/lib/prisma";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Tasks",
+};
 
 export default async function Tasks({ params }: { params: Promise<{ workspaceId: string }> }) {
 
