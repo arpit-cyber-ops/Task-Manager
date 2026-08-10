@@ -1,5 +1,5 @@
 "use client"
-import { removeMember } from "@/app/workspaces/actions";
+import { removeMember } from "@/app/workspaces/actions/membershipAction";
 import MemberProfile from "@/types/memberProfile";
 import { useActionState, useEffect } from "react";
 

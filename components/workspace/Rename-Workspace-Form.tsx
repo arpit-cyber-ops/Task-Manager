@@ -1,5 +1,5 @@
 "use client"
-import { renameWorkspace } from "@/app/workspaces/actions";
+import { renameWorkspace } from "@/app/workspaces/actions/workspaceAction";
 import { WorkspaceWithCounts } from "@/types/workspace";
 import { useActionState, useEffect } from "react";
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { createTask } from "@/app/workspaces/actions"
+import { createTask } from "@/app/workspaces/actions/taskAction"
 import { useActionState, useEffect } from "react"
 
 export default function CreateTaskForm({ workspaceId, onClose }: { workspaceId: string, onClose: () => void }) {

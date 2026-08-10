@@ -1,6 +1,6 @@
 "use client"
 
-import { completeTask } from "@/app/workspaces/actions"
+import { completeTask } from "@/app/workspaces/actions/taskAction"
 
 export default function TaskCheckbox({taskId, completed}: {taskId: string, completed: boolean}) {
     async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {

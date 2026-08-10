@@ -1,6 +1,6 @@
 "use client"
 
-import { inviteMember } from "@/app/workspaces/actions"
+import { inviteMember } from "@/app/workspaces/actions/membershipAction"
 import { useActionState, useEffect } from "react"
 
 export default function InviteMemberForm({ workspaceId, onClose }: { workspaceId: string, onClose: () => void }) {

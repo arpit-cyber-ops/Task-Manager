@@ -1,5 +1,5 @@
 "use client"
-import { deleteTask } from "@/app/workspaces/actions";
+import { deleteTask } from "@/app/workspaces/actions/taskAction";
 import { useActionState, useEffect } from "react";
 
 export default function DeleteTaskForm({ taskId, onClose }: { taskId: string, onClose: () => void }) {

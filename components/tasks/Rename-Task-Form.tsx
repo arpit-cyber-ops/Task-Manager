@@ -1,6 +1,6 @@
 "use client"
 
-import { renameTask } from "@/app/workspaces/actions";
+import { renameTask } from "@/app/workspaces/actions/taskAction";
 import { useActionState, useEffect } from "react";
 export default function RenameTaskForm({ taskId, title, onClose }: { taskId: string, title: string, onClose: () => void }) {
 

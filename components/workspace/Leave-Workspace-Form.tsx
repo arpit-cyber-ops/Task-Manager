@@ -1,5 +1,5 @@
 "use client"
-import { leaveWorkspace } from "@/app/workspaces/actions";
+import { leaveWorkspace } from "@/app/workspaces/actions/workspaceAction";
 import { useActionState } from "react"
 
 export default function LeaveWorkspaceForm({ workspaceId, onClose }: { workspaceId: string, onClose: () => void }) {

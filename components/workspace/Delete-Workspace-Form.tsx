@@ -1,5 +1,5 @@
 "use client"
-import { deleteWorkspace } from "@/app/workspaces/actions";
+import { deleteWorkspace } from "@/app/workspaces/actions/workspaceAction";
 import { WorkspaceWithCounts } from "@/types/workspace";
 import { useActionState, useEffect } from "react";
 
