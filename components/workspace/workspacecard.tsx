@@ -26,9 +26,14 @@ export default function WorkspaceCard({ workspace }: WorkspaceProps) {
                         {workspace._count.memberships > 1 ? " Members" : " Member"}
                     </p>
                 </div>
-                <div>
-                    <WorkspaceActions workspace={workspace} />
-                </div>
+                {workspace.memberships[0].role === "OWNER" ?
+
+                    <div>
+                        <WorkspaceActions workspace={workspace} />
+                    </div>
+                    :
+                    <p></p>
+                }
             </div>
         </div>
     )

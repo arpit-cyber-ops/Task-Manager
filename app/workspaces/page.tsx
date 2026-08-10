@@ -44,17 +44,28 @@ export default async function Workspace() {
 
         <TitleBar />
 
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {workspaces.length > 0 ?
 
-          {
-            workspaces.map((workspace) => (
-              <WorkspaceCard
-                key={workspace.id}
-                workspace={workspace} />
-            ))
-          }
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
-        </div>
+            {
+              workspaces.map((workspace) => (
+                <WorkspaceCard
+                  key={workspace.id}
+                  workspace={workspace} />
+              ))
+            }
+
+          </div>
+
+          :
+
+          <div className="flex flex-col gap-2 items-center text-center text-2xl text-muted-foreground p-4">
+            <p>You don't have any workspaces yet.</p>
+            <p>Create a workspace to get started.</p>
+          </div>
+
+        }
 
       </div>
 

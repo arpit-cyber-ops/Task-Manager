@@ -46,9 +46,9 @@ export default async function WorkspaceLayout({ children, params }: { children: 
 
             <div className="flex min-h-16 items-center justify-between gap-4 border-b border-border px-4 sm:px-6">
 
-                <p className="shrink-0 font-semibold">Task-Manager</p>
+                <p className="shrink-0 md:w-56 font-semibold">Task-Manager</p>
 
-                <p className="min-w-0 flex-1 truncate text-sm font-medium sm:text-base">{workspace.name}</p>
+                <p className="min-w-0 flex-1 truncate text-sm font-medium ml-6 md:ml-0 sm:text-base">{workspace.name}</p>
 
                 <div className="flex shrink-0 items-center gap-2 rounded-full border border-border px-2 py-1">
                     <UserButton />
